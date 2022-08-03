@@ -29,6 +29,20 @@ variable "prometheus_instance_type" {
   default     = "c5.2xlarge"
 }
 
+variable "ec2_ebs_device_names" {
+  default = [
+    "/dev/sdd"
+  ]
+}
+
+variable "ec2_ebs_volume_count" {
+  default = 1
+}
+
+variable "ec2_ebs_volume_size" {
+  default = 2000
+}
+
 variable "enable_monitoring" {
   description = "Setup a prometheus/grafana instance"
   type        = bool
@@ -71,6 +85,7 @@ variable "distro_ami" {
     # https://us-west-2.console.aws.amazon.com/ec2/v2/home?region=us-west-2#LaunchInstanceWizard:
     "rhel-8"         = "ami-087c2c50437d0b80d"
     "amazon-linux-2" = "ami-01ce4793a2f45922e"
+    "amazon-linux-2-arm" = "ami-08e93a9522bbe6df6"
   }
 }
 
@@ -87,5 +102,6 @@ variable "distro_ssh_user" {
     "ubuntu-hirsute" = "ubuntu"
     "rhel-8"         = "ec2-user"
     "amazon-linux-2" = "ec2-user"
+    "amazon-linux-2-arm" = "ec2-user"
   }
 }

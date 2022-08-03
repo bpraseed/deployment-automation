@@ -59,6 +59,19 @@ resource "aws_instance" "client" {
   }
 }
 
+resource "aws_ebs_volume" "ebs_volume" {
+  count             = "${var.nodes * var.ec2_ebs_volume_count}"
+  availability_zone = "${element(aws_instance.redpanda.*.availability_zone, count.index)}"
+  size              = "${var.ec2_ebs_volume_size}"
+}
+
+resource "aws_volume_attachment" "volume_attachement" {
+  count       = "${var.nodes * var.ec2_ebs_volume_count}"
+  volume_id   = "${aws_ebs_volume.ebs_volume.*.id[count.index]}"
+  device_name = "${element(var.ec2_ebs_device_names, count.index)}"
+  instance_id = "${element(aws_instance.redpanda.*.id, count.index)}"
+}
+
 resource "aws_security_group" "node_sec_group" {
   name = "${local.deployment_id}-node-sec-group"
   tags = local.instance_tags
